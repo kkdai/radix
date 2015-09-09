@@ -61,18 +61,16 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 
 	//Reach leaf the end point, refer this case https://goo.gl/mqXzB1
 	if currentNode.isLeafNode() {
-
 		//Insert key value as new child node of currentNode
-		currentNode.insertChildNote(targetKey, targetValue)
-
+		currentNode.insertChildNote(containKey, targetKey, targetValue)
 		//Original leaf node, become another leaf of currentNode
-		currentNode.insertChildNote(currentNode.leaf.key, currentNode.leaf.value)
-
+		currentNode.insertChildNote(containKey, currentNode.leaf.key, currentNode.leaf.value)
 		// currentNode become not leaf node
 		currentNode.leaf = nil
 		return
 	}
 
+	hasInsert := false
 	for _, edgeObj := range currentNode.edges {
 		//fmt.Printf("edge[%s]-> ", string(edgeObj.containKey))
 		if edgeObj.targetNote != nil {
@@ -84,6 +82,12 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 
 		currentNode = edgeObj.targetNote
 		t.recursiveInsertTree(currentNode, containKey, targetKey, targetValue)
+	}
+
+	if !hasInsert {
+		//New edge with new key on leaf node
+		//Ref: https://goo.gl/nSLTJr
+		currentNode.insertChildNote(containKey, targetKey, targetValue)
 	}
 }
 

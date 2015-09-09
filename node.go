@@ -20,8 +20,8 @@ func (n *node) isLeafNode() bool {
 	return n.leaf != nil
 }
 
-func (n *node) insertChildNote(totalKey string, value interface{}) {
+func (n *node) insertChildNote(containKey, totalKey string, value interface{}) {
 	newNode := &node{leaf: &leafNode{key: totalKey, value: value}}
-	newEdge := edge{containKey: totalKey, sourceNode: n, targetNote: newNode}
+	newEdge := edge{containKey: containKey, sourceNode: n, targetNote: newNode}
 	n.edges = append(n.edges, newEdge)
 }
