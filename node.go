@@ -12,6 +12,7 @@ type leafNode struct {
 }
 
 type node struct {
-	leaf  *leafNode
-	edges []edge
+	leaf      *leafNode
+	edges     []edge
+	nodeIndex int
 }
