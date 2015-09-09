@@ -25,11 +25,11 @@ func TeststringSubsetPrefix(t *testing.T) {
 
 func TestPrintTree(t *testing.T) {
 
-	rootNode := node{nodeIndex: 0, leaf: nil}
+	rootNode := node{leaf: nil}
 
-	cNode := node{nodeIndex: 1, leaf: nil}
-	lNode := node{nodeIndex: 2, leaf: &leafNode{key: "company", value: 1}}
-	rNode := node{nodeIndex: 3, leaf: &leafNode{key: "comflict", value: 2}}
+	cNode := node{leaf: nil}
+	lNode := node{leaf: &leafNode{key: "company", value: 1}}
+	rNode := node{leaf: &leafNode{key: "comflict", value: 2}}
 
 	rootEdge := edge{containKey: "com"}
 	rootEdge.sourceNode = &rootNode

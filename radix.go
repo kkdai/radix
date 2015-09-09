@@ -31,17 +31,17 @@ func stringSubsetPrefix(str1, str2 string) (string, bool) {
 }
 
 func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
-	if currentNode.leaf != nil {
+	if currentNode.isLeafNode() {
 		//Reach leaf, the end point
-		fmt.Printf("Leaf[%d] key:%s value:%v\n", currentNode.nodeIndex, currentNode.leaf.key, currentNode.leaf.value)
+		fmt.Printf("Leaf key:%s value:%v\n", currentNode.leaf.key, currentNode.leaf.value)
 		return
 	}
 
-	fmt.Printf("\n[%d/%d] node\n", treeLevel, currentNode.nodeIndex)
+	fmt.Printf("\n[%d] node\n", treeLevel)
 	for _, edgeObj := range currentNode.edges {
 		fmt.Printf("edge[%s]-> ", string(edgeObj.containKey))
 		if edgeObj.targetNote != nil {
-			fmt.Printf("[%d]\n", edgeObj.targetNote.nodeIndex)
+			fmt.Printf("[node]\n")
 		} else {
 			fmt.Printf("[nil]\n")
 			continue
@@ -57,24 +57,33 @@ func (t *radixTree) PrintTree() {
 	t.recursivePrintTree(t.root, 1)
 }
 
-func (t *radixTree) recursiveInsertTree(currentNode *node, totalKey string, targetKey string, targetValue interface{}) {
-	if currentNode.leaf != nil {
-		//Reach leaf, the end point
-		//newNode := &node{}
+func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, targetKey string, targetValue interface{}) {
+
+	//Reach leaf the end point, refer this case https://goo.gl/mqXzB1
+	if currentNode.isLeafNode() {
+
+		//Insert key value as new child node of currentNode
+		currentNode.insertChildNote(targetKey, targetValue)
+
+		//Original leaf node, become another leaf of currentNode
+		currentNode.insertChildNote(currentNode.leaf.key, currentNode.leaf.value)
+
+		// currentNode become not leaf node
+		currentNode.leaf = nil
 		return
 	}
 
 	for _, edgeObj := range currentNode.edges {
 		//fmt.Printf("edge[%s]-> ", string(edgeObj.containKey))
 		if edgeObj.targetNote != nil {
-			fmt.Printf("[%d]\n", edgeObj.targetNote.nodeIndex)
+			fmt.Printf("[node]\n")
 		} else {
 			fmt.Printf("[nil]\n")
 			continue
 		}
 
 		currentNode = edgeObj.targetNote
-		t.recursiveInsertTree(currentNode, totalKey, targetKey, targetValue)
+		t.recursiveInsertTree(currentNode, containKey, targetKey, targetValue)
 	}
 }
 
