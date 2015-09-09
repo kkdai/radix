@@ -6,18 +6,18 @@ import (
 )
 
 func TeststringSubsetPrefix(t *testing.T) {
-	sub, _ := stringSubsetPrefix([]byte("playground"), []byte("yield"))
-	if string(sub) != "" {
+	sub, _ := stringSubsetPrefix("playground", "yield")
+	if sub != "" {
 		t.Errorf("None string subset failed, expect:%s but get:%s\n", "", sub)
 	}
 
-	sub, _ = stringSubsetPrefix([]byte("playground"), []byte("playground"))
-	if string(sub) != "playground" {
+	sub, _ = stringSubsetPrefix("playground", "playground")
+	if sub != "playground" {
 		t.Errorf("full subset failed, expect:%s but get:%s\n", "playground", sub)
 	}
 
-	sub, _ = stringSubsetPrefix([]byte("playground"), []byte("playboy"))
-	if string(sub) != "play" {
+	sub, _ = stringSubsetPrefix("playground", "playboy")
+	if sub != "play" {
 		t.Errorf("Sub string subset failed, expect:%s but get:%s\n", "play", sub)
 	}
 
@@ -31,16 +31,16 @@ func TestPrintTree(t *testing.T) {
 	lNode := node{nodeIndex: 2, leaf: &leafNode{key: "company", value: 1}}
 	rNode := node{nodeIndex: 3, leaf: &leafNode{key: "comflict", value: 2}}
 
-	rootEdge := edge{containKey: []byte("com")}
+	rootEdge := edge{containKey: "com"}
 	rootEdge.sourceNode = &rootNode
 	rootEdge.targetNote = &cNode
 	rootNode.edges = append(rootNode.edges, rootEdge)
 
-	lEdge := edge{containKey: []byte("pany")}
+	lEdge := edge{containKey: "pany"}
 	lEdge.sourceNode = &cNode
 	lEdge.targetNote = &lNode
 
-	rEdge := edge{containKey: []byte("flict")}
+	rEdge := edge{containKey: "flict"}
 	rEdge.sourceNode = &cNode
 	rEdge.targetNote = &rNode
 

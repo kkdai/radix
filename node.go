@@ -1,7 +1,7 @@
 package radix
 
 type edge struct {
-	containKey []byte
+	containKey string
 	sourceNode *node
 	targetNote *node
 }
