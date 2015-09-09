@@ -6,7 +6,12 @@ type edge struct {
 	targetNote *node
 }
 
+type leafNode struct {
+	key   string
+	value interface{}
+}
+
 type node struct {
-	isLeaf bool
-	edges  []edge
+	leaf  *leafNode
+	edges []edge
 }
