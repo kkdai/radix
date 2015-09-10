@@ -21,6 +21,13 @@ func TeststringSubsetPrefix(t *testing.T) {
 		t.Errorf("Sub string subset failed, expect:%s but get:%s\n", "play", sub)
 	}
 
+	ss1 := "main"
+	ss2 := "mainly"
+	sub, _ = stringSubsetPrefix(ss2, ss1)
+	if sub != ss1 {
+		t.Errorf("Sub string subset failed, expect:%s but get:%s\n", "main", sub)
+	}
+
 }
 
 func TestPrintTree(t *testing.T) {
@@ -63,12 +70,17 @@ func TestNodeInsert(t *testing.T) {
 func TestTreeInsert(t *testing.T) {
 	rTree := radixTree{}
 	rTree.Insert("test", 1)
-	rTree.PrintTree()
 	rTree.Insert("team", 2)
-	rTree.PrintTree()
 
 	if rTree.root.edges[0].containKey != "te" {
 		t.Errorf("TreeInsert: Simple case failed, expect `te`, but get %s\n", rTree.root.edges[0].containKey)
 	}
 
+	rTree2 := radixTree{}
+	rTree2.Insert("main", 1)
+	rTree2.Insert("mainly", 2)
+
+	if rTree2.root.edges[0].containKey != "main" {
+		t.Errorf("TreeInsert: Simple case failed, expect `main`, but get %s\n", rTree.root.edges[0].containKey)
+	}
 }

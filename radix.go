@@ -10,27 +10,20 @@ type radixTree struct {
 }
 
 func stringSubsetPrefix(str1, str2 string) (string, bool) {
-	byt1 := []byte(str1)
-	byt2 := []byte(str2)
-	var biggerLen int
-	if len(byt1) > len(byt2) {
-		biggerLen = len(byt1)
-	} else {
-		biggerLen = len(byt2)
-	}
-
-	workByte := make([]byte, biggerLen)
 	findSubset := false
-	for i := 0; i < len(byt1) && i < len(byt2); i++ {
-		if byt1[i] != byt2[i] {
-			retByte := make([]byte, i+1)
-			retByte = workByte[:i]
-			return string(retByte), findSubset
+	for i := 0; i < len(str1) && i < len(str2); i++ {
+		if str1[i] != str2[i] {
+			retStr := str1[:i]
+			return retStr, findSubset
 		}
 		findSubset = true
-		workByte[i] = byt1[i]
 	}
-	return string(workByte), findSubset
+
+	if len(str1) > len(str2) {
+		return str2, findSubset
+	}
+
+	return str1, findSubset
 }
 
 func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
@@ -66,7 +59,7 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 		//Insert key value as new child node of currentNode
 		currentNode.insertLeafNote(containKey, targetKey, targetValue)
 		//Original leaf node, become another leaf of currentNode
-		currentNode.insertLeafNote(containKey, currentNode.leaf.key, currentNode.leaf.value)
+		currentNode.insertLeafNote("", currentNode.leaf.key, currentNode.leaf.value)
 		// currentNode become not leaf node
 		currentNode.leaf = nil
 		return //Insert complete
@@ -78,7 +71,7 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 			if subStr == currentNode.edges[edgeIndex].containKey {
 				//trim edgeObj.containKey from targetKey
 				nextTargetKey := strings.TrimPrefix(containKey, currentNode.edges[edgeIndex].containKey)
-				t.recursiveInsertTree(currentNode.edges[edgeIndex].targetNode, containKey, nextTargetKey, targetValue)
+				t.recursiveInsertTree(currentNode.edges[edgeIndex].targetNode, nextTargetKey, targetKey, targetValue)
 				return
 			} else {
 				//contain case
