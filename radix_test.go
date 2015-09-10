@@ -33,22 +33,42 @@ func TestPrintTree(t *testing.T) {
 
 	rootEdge := edge{containKey: "com"}
 	rootEdge.sourceNode = &rootNode
-	rootEdge.targetNote = &cNode
+	rootEdge.targetNode = &cNode
 	rootNode.edges = append(rootNode.edges, rootEdge)
 
 	lEdge := edge{containKey: "pany"}
 	lEdge.sourceNode = &cNode
-	lEdge.targetNote = &lNode
+	lEdge.targetNode = &lNode
 
 	rEdge := edge{containKey: "flict"}
 	rEdge.sourceNode = &cNode
-	rEdge.targetNote = &rNode
+	rEdge.targetNode = &rNode
 
 	cNode.edges = append(cNode.edges, lEdge)
 	cNode.edges = append(cNode.edges, rEdge)
 	fmt.Println("enges:", cNode.edges)
 	rTree := radixTree{}
-	rTree.root = &rootNode
+	rTree.root = rootNode
 
 	rTree.PrintTree()
+}
+
+func TestNodeInsert(t *testing.T) {
+	rTree := radixTree{root: node{}}
+	rTree.root.insertLeafNote("keyAll", "keyAll", 1)
+	rTree.root.insertLeafNote("open", "open", 2)
+	rTree.PrintTree()
+}
+
+func TestTreeInsert(t *testing.T) {
+	rTree := radixTree{}
+	rTree.Insert("test", 1)
+	rTree.PrintTree()
+	rTree.Insert("team", 2)
+	rTree.PrintTree()
+
+	if rTree.root.edges[0].containKey != "te" {
+		t.Errorf("TreeInsert: Simple case failed, expect `te`, but get %s\n", rTree.root.edges[0].containKey)
+	}
+
 }
