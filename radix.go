@@ -9,6 +9,14 @@ type radixTree struct {
 	root node
 }
 
+func contrainPrefix(str1, str2 string) bool {
+	if sub, find := stringSubsetPrefix(str1, str2); find {
+		return sub == str2
+	}
+	//In case "" != ""
+	return str1 == str2
+}
+
 func stringSubsetPrefix(str1, str2 string) (string, bool) {
 	findSubset := false
 	for i := 0; i < len(str1) && i < len(str2); i++ {
@@ -26,29 +34,30 @@ func stringSubsetPrefix(str1, str2 string) (string, bool) {
 	return str1, findSubset
 }
 
+func NewRadixTree() *radixTree {
+	return &radixTree{}
+}
+
 func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
+	indentStr := ""
+	for i := 1; i < treeLevel; i++ {
+		indentStr = indentStr + "\t"
+	}
+
 	if currentNode.isLeafNode() {
 		//Reach leaf, the end point
-		fmt.Printf("Leaf key:%s value:%v\n", currentNode.leaf.key, currentNode.leaf.value)
+		fmt.Printf("%s[%d]Leaf key:%s value:%v\n", indentStr, treeLevel, currentNode.leaf.key, currentNode.leaf.value)
 		return
 	}
 
-	fmt.Printf("\n[%d] node\n", treeLevel)
+	fmt.Printf("%s[%d]Node has %d edges \n", indentStr, treeLevel, len(currentNode.edges))
 	for _, edgeObj := range currentNode.edges {
-		fmt.Printf("edge[%s]-> ", string(edgeObj.containKey))
-		if edgeObj.targetNode != nil {
-			fmt.Printf("[node]\n")
-		} else {
-			fmt.Printf("[nil]\n")
-			continue
-		}
-
+		fmt.Printf("%s[%d]Edge[%s]\n", indentStr, treeLevel, string(edgeObj.containKey))
 		t.recursivePrintTree(edgeObj.targetNode, treeLevel+1)
 	}
 }
 
 func (t *radixTree) PrintTree() {
-	fmt.Println("\n\nroot node:", t.root, " leaf:", t.root.leaf)
 	t.recursivePrintTree(&t.root, 1)
 }
 
@@ -99,6 +108,21 @@ func (t *radixTree) Insert(searchKey string, value interface{}) {
 	t.recursiveInsertTree(&t.root, searchKey, searchKey, value)
 }
 
-func (t *radixTree) Lookup(searchKey string) (interface{}, bool) {
+func (t *radixTree) recursiveLoopup(searchNode *node, searchKey string) (interface{}, bool) {
+	if searchNode.isLeafNode() {
+		return searchNode.leaf.value, true
+	}
+
+	for _, edgeObj := range searchNode.edges {
+		if contrainPrefix(searchKey, edgeObj.containKey) {
+			nextSearchKey := strings.TrimPrefix(searchKey, edgeObj.containKey)
+			return t.recursiveLoopup(edgeObj.targetNode, nextSearchKey)
+		}
+	}
+
 	return nil, false
+}
+
+func (t *radixTree) Lookup(searchKey string) (interface{}, bool) {
+	return t.recursiveLoopup(&t.root, searchKey)
 }

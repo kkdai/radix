@@ -84,3 +84,39 @@ func TestTreeInsert(t *testing.T) {
 		t.Errorf("TreeInsert: Simple case failed, expect `main`, but get %s\n", rTree.root.edges[0].containKey)
 	}
 }
+
+func TestLookup(t *testing.T) {
+	rTree := radixTree{}
+	rTree.Insert("test", 1)
+	rTree.Insert("team", 2)
+	rTree.Insert("trobot", 3)
+	rTree.Insert("apple", 4)
+	rTree.Insert("app", 5)
+	rTree.Insert("tesla", 6)
+
+	rTree.PrintTree()
+
+	ret, find := rTree.Lookup("team")
+	fmt.Println(ret, find)
+	if !find || ret != 2 {
+		t.Errorf("Lookup failed, expect '2', but get %v", ret)
+	}
+
+	ret, find = rTree.Lookup("apple")
+	fmt.Println(ret, find)
+	if !find || ret != 4 {
+		t.Errorf("Lookup failed, expect '4', but get %v", ret)
+	}
+
+	ret, find = rTree.Lookup("tesla")
+	fmt.Println(ret, find)
+	if !find || ret != 6 {
+		t.Errorf("Lookup failed, expect '6', but get %v", ret)
+	}
+
+	ret, find = rTree.Lookup("app")
+	fmt.Println(ret, find)
+	if !find || ret != 5 {
+		t.Errorf("Lookup failed, expect '5', but get %v", ret)
+	}
+}
