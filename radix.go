@@ -13,8 +13,7 @@ func contrainPrefix(str1, str2 string) bool {
 	if sub, find := stringSubsetPrefix(str1, str2); find {
 		return sub == str2
 	}
-	//In case "" != ""
-	return str1 == str2
+	return false
 }
 
 func stringSubsetPrefix(str1, str2 string) (string, bool) {
@@ -29,11 +28,15 @@ func stringSubsetPrefix(str1, str2 string) (string, bool) {
 
 	if len(str1) > len(str2) {
 		return str2, findSubset
+	} else if len(str1) == len(str2) {
+		//fix "" not a subset of ""
+		return str1, str1 == str2
 	}
 
 	return str1, findSubset
 }
 
+//Create a Radix Tree
 func NewRadixTree() *radixTree {
 	return &radixTree{}
 }
@@ -57,6 +60,7 @@ func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
 	}
 }
 
+//PrintTree: Print out current tree struct, it will using \t for tree level
 func (t *radixTree) PrintTree() {
 	t.recursivePrintTree(&t.root, 1)
 }
@@ -65,13 +69,20 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 
 	//Reach leaf the end point, refer this case https://goo.gl/mqXzB1
 	if currentNode.isLeafNode() {
-		//Insert key value as new child node of currentNode
-		currentNode.insertLeafNote(containKey, targetKey, targetValue)
-		//Original leaf node, become another leaf of currentNode
-		currentNode.insertLeafNote("", currentNode.leaf.key, currentNode.leaf.value)
-		// currentNode become not leaf node
-		currentNode.leaf = nil
-		return //Insert complete
+		if targetKey == currentNode.leaf.key {
+			//the same key, update value
+			currentNode.leaf.value = targetValue
+			return
+
+		} else {
+			//Insert key value as new child node of currentNode
+			//Original leaf node, become another leaf of currentNode
+			//currentNode become not leaf node
+			currentNode.insertLeafNote(containKey, targetKey, targetValue)
+			currentNode.insertLeafNote("", currentNode.leaf.key, currentNode.leaf.value)
+			currentNode.leaf = nil
+			return
+		}
 	}
 
 	for edgeIndex, _ := range currentNode.edges {
@@ -104,6 +115,8 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 	return
 }
 
+//Insert: key and value into radix tree
+//Major implement refer from Wiki: https://en.wikipedia.org/wiki/Radix_tree
 func (t *radixTree) Insert(searchKey string, value interface{}) {
 	t.recursiveInsertTree(&t.root, searchKey, searchKey, value)
 }
@@ -123,6 +136,12 @@ func (t *radixTree) recursiveLoopup(searchNode *node, searchKey string) (interfa
 	return nil, false
 }
 
+//Lookup: Find if seachKey exist in current radix tree and return its value
 func (t *radixTree) Lookup(searchKey string) (interface{}, bool) {
 	return t.recursiveLoopup(&t.root, searchKey)
+}
+
+//Delete: Delete leaf node by seachKey will return if exist
+func (t *radixTree) Delete(searchKey string) bool {
+	return false
 }

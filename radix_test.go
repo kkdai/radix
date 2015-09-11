@@ -94,29 +94,32 @@ func TestLookup(t *testing.T) {
 	rTree.Insert("app", 5)
 	rTree.Insert("tesla", 6)
 
-	rTree.PrintTree()
-
 	ret, find := rTree.Lookup("team")
-	fmt.Println(ret, find)
 	if !find || ret != 2 {
 		t.Errorf("Lookup failed, expect '2', but get %v", ret)
 	}
 
 	ret, find = rTree.Lookup("apple")
-	fmt.Println(ret, find)
 	if !find || ret != 4 {
 		t.Errorf("Lookup failed, expect '4', but get %v", ret)
 	}
 
 	ret, find = rTree.Lookup("tesla")
-	fmt.Println(ret, find)
 	if !find || ret != 6 {
 		t.Errorf("Lookup failed, expect '6', but get %v", ret)
 	}
 
 	ret, find = rTree.Lookup("app")
-	fmt.Println(ret, find)
 	if !find || ret != 5 {
 		t.Errorf("Lookup failed, expect '5', but get %v", ret)
 	}
+
+	rTree.Insert("app", 7)
+	rTree.PrintTree()
+	ret, find = rTree.Lookup("app")
+	fmt.Println(ret, find)
+	if !find || ret != 7 {
+		t.Errorf("Insert update lookup failed, expect '7', but get %v", ret)
+	}
+
 }

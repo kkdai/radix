@@ -24,28 +24,61 @@ Usage
 ---------------
 
 ```go
-        package main
-        
-        import (
-        	"fmt"
-        
-        	. "github.com/kkdai/radix"
-        )
-        
-        func main() {
-        	rTree := radixTree{}
-        	rTree.Insert("test", 1)
-        	rTree.Insert("team", 2)
-        
-            rTree.PrintTree()
-        }
+
+package main
+
+import (
+	"fmt"
+
+	. "github.com/kkdai/radix"
+)
+
+func main() {
+	rTree := NewRadixTree()
+	rTree.Insert("test", 1)
+	rTree.Insert("team", 2)
+	rTree.Insert("trobot", 3)
+	rTree.Insert("apple", 4)
+	rTree.Insert("app", 5)
+	rTree.Insert("tesla", 6)
+
+	rTree.PrintTree()
+
+// [1]Node has 2 edges
+// [1]Edge[t]
+// 	[2]Node has 2 edges
+// 	[2]Edge[e]
+// 		[3]Node has 2 edges
+// 		[3]Edge[s]
+// 			[4]Node has 2 edges
+// 			[4]Edge[t]
+// 				[5]Leaf key:test value:1
+// 			[4]Edge[la]
+// 				[5]Leaf key:tesla value:6
+// 		[3]Edge[am]
+// 			[4]Leaf key:team value:2
+// 	[2]Edge[robot]
+// 		[3]Leaf key:trobot value:3
+// [1]Edge[app]
+// 	[2]Node has 2 edges
+// 	[2]Edge[le]
+// 		[3]Leaf key:apple value:4
+// 	[2]Edge[]
+// 		[3]Leaf key:app value:5
+
+
+	ret, find := rTree.Lookup("app")
+	fmt.Println(ret, find)
+//5 true
+}
+
 ```
 
 Inspired By
 =============
 
-
-- [armon/go-radix](https://github.com/tuxychandru/pubsub)
+- [Radix Tree: Wiki](https://en.wikipedia.org/wiki/Radix_tree)
+- [armon/go-radix](https://github.com/armon/go-radix)
 
 
 License
