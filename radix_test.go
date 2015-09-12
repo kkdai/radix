@@ -199,5 +199,15 @@ func TestDelete(t *testing.T) {
 	if !ret {
 		t.Errorf("Recursive delete on parent node, failed")
 	}
+	fmt.Println("---------------")
 	rTree.PrintTree()
+	rTree.Delete("trobot")
+	ret = rTree.Delete("test")
+	ret = rTree.Delete("tesla")
+	fmt.Println("---------------")
+	rTree.PrintTree()
+
+	if rTree.Delete("anyWrongKey") {
+		t.Errorf("Delete empty should not return true")
+	}
 }

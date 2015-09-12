@@ -202,6 +202,7 @@ func (t *radixTree) Delete(searchKey string) bool {
 		for index, _ := range pNode.edges {
 			if pNode.edges[index].targetNode == lNode {
 				pNode.edges = append(pNode.edges[:index], pNode.edges[index+1:]...)
+				break
 			}
 		}
 
