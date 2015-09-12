@@ -48,7 +48,7 @@ func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
 	}
 
 	if currentNode.isLeafNode() {
-		//Reach leaf, the end point
+		//Reach  the end point
 		fmt.Printf("%s[%d]Leaf key:%s value:%v\n", indentStr, treeLevel, currentNode.leaf.key, currentNode.leaf.value)
 		return
 	}
@@ -191,10 +191,31 @@ func (t *radixTree) findParent(locateNode *node) (*node, bool) {
 //Delete: Delete leaf node by seachKey will return if exist
 func (t *radixTree) Delete(searchKey string) bool {
 
-	//lNode, pNode, find := t.locateLeafNode(searchKey)
-	//if !find {
-	return false
-	//}
+	lNode, pNode, find := t.locateLeafNode(searchKey)
+	if !find {
+		//leaf not exist, delete failed
+		return false
+	}
 
+	for {
+		//delete note from parent node
+		lNode = nil
+		for index, _ := range pNode.edges {
+			if pNode.edges[index].targetNode == lNode {
+				pNode.edges = append(pNode.edges[:index], pNode.edges[index+1:]...)
+			}
+		}
+
+		if len(pNode.edges) != 0 || pNode == &t.root {
+			//Stop loop up level condition
+			//1: parent node have more than 1 edge after delete
+			//2: parent node is root node
+			return true
+		}
+
+		//Keep loop up level
+		lNode = pNode
+		pNode, _ = t.findParent(pNode)
+	}
 	return false
 }

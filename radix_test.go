@@ -61,14 +61,14 @@ func TestPrintTree(t *testing.T) {
 }
 
 func TestNodeInsert(t *testing.T) {
-	rTree := radixTree{root: node{}}
+	rTree := NewRadixTree()
 	rTree.root.insertLeafNote("keyAll", "keyAll", 1)
 	rTree.root.insertLeafNote("open", "open", 2)
 	rTree.PrintTree()
 }
 
 func TestTreeInsert(t *testing.T) {
-	rTree := radixTree{}
+	rTree := NewRadixTree()
 	rTree.Insert("test", 1)
 	rTree.Insert("team", 2)
 
@@ -76,7 +76,7 @@ func TestTreeInsert(t *testing.T) {
 		t.Errorf("TreeInsert: Simple case failed, expect `te`, but get %s\n", rTree.root.edges[0].containKey)
 	}
 
-	rTree2 := radixTree{}
+	rTree2 := NewRadixTree()
 	rTree2.Insert("main", 1)
 	rTree2.Insert("mainly", 2)
 
@@ -86,7 +86,7 @@ func TestTreeInsert(t *testing.T) {
 }
 
 func TestLookup(t *testing.T) {
-	rTree := radixTree{}
+	rTree := NewRadixTree()
 	rTree.Insert("test", 1)
 	rTree.Insert("team", 2)
 	rTree.Insert("trobot", 3)
@@ -125,7 +125,7 @@ func TestLookup(t *testing.T) {
 }
 
 func TestLocateLeafNode(t *testing.T) {
-	rTree := radixTree{}
+	rTree := NewRadixTree()
 	rTree.Insert("test", 1)
 	rTree.Insert("team", 2)
 	rTree.Insert("trobot", 3)
@@ -141,7 +141,7 @@ func TestLocateLeafNode(t *testing.T) {
 }
 
 func TestFindParent(t *testing.T) {
-	rTree := radixTree{}
+	rTree := NewRadixTree()
 	rTree.Insert("test", 1)
 	rTree.Insert("team", 2)
 	rTree.Insert("trobot", 3)
@@ -174,4 +174,19 @@ func TestFindParent(t *testing.T) {
 	} else {
 		t.Errorf("Failed on find parent on root, cannot find it.")
 	}
+}
+
+func TestDelete(t *testing.T) {
+	rTree := NewRadixTree()
+	rTree.Insert("test", 1)
+	rTree.Insert("team", 2)
+	rTree.Insert("trobot", 3)
+	rTree.Insert("apple", 4)
+	rTree.Insert("app", 5)
+	rTree.Insert("tesla", 6)
+	rTree.PrintTree()
+
+	ret := rTree.Delete("team")
+	fmt.Println(ret)
+	rTree.PrintTree()
 }
