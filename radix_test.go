@@ -187,6 +187,17 @@ func TestDelete(t *testing.T) {
 	rTree.PrintTree()
 
 	ret := rTree.Delete("team")
-	fmt.Println(ret)
+	if !ret {
+		t.Errorf("Basic delete failed")
+	}
+	rTree.PrintTree()
+
+	ret = rTree.Delete("app")
+	rTree.PrintTree()
+
+	ret = rTree.Delete("apple")
+	if !ret {
+		t.Errorf("Recursive delete on parent node, failed")
+	}
 	rTree.PrintTree()
 }

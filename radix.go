@@ -199,12 +199,9 @@ func (t *radixTree) Delete(searchKey string) bool {
 
 	for {
 		//delete note from parent node
-		fmt.Println("ori edges=", len(pNode.edges), " content=", pNode.edges)
 		for index, _ := range pNode.edges {
-			fmt.Println(pNode.edges[index].targetNode, lNode)
 			if pNode.edges[index].targetNode == lNode {
 				pNode.edges = append(pNode.edges[:index], pNode.edges[index+1:]...)
-				fmt.Println("deleted edges=", len(pNode.edges))
 			}
 		}
 
