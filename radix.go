@@ -10,13 +10,13 @@ type radixTree struct {
 }
 
 func contrainPrefix(str1, str2 string) bool {
-	if sub, find := stringSubsetPrefix(str1, str2); find {
+	if sub, find := getSubsetPrefix(str1, str2); find {
 		return sub == str2
 	}
 	return false
 }
 
-func stringSubsetPrefix(str1, str2 string) (string, bool) {
+func getSubsetPrefix(str1, str2 string) (string, bool) {
 	findSubset := false
 	for i := 0; i < len(str1) && i < len(str2); i++ {
 		if str1[i] != str2[i] {
@@ -86,7 +86,7 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 	}
 
 	for edgeIndex, _ := range currentNode.edges {
-		subStr, find := stringSubsetPrefix(containKey, currentNode.edges[edgeIndex].containKey)
+		subStr, find := getSubsetPrefix(containKey, currentNode.edges[edgeIndex].containKey)
 		if find {
 			if subStr == currentNode.edges[edgeIndex].containKey {
 				//trim edgeObj.containKey from targetKey
@@ -141,7 +141,60 @@ func (t *radixTree) Lookup(searchKey string) (interface{}, bool) {
 	return t.recursiveLoopup(&t.root, searchKey)
 }
 
+func (t *radixTree) recursiveLocateLeafNode(currentNode, parentNode *node, containKey, locateKey string) (*node, *node, bool) {
+
+	if currentNode.isLeafNode() {
+		return currentNode, parentNode, currentNode.leaf.key == locateKey
+	}
+
+	for _, edgeObj := range currentNode.edges {
+		if contrainPrefix(containKey, edgeObj.containKey) {
+			nextContainKey := strings.TrimPrefix(containKey, edgeObj.containKey)
+			return t.recursiveLocateLeafNode(edgeObj.targetNode, currentNode, nextContainKey, locateKey)
+		}
+	}
+
+	return nil, nil, false
+}
+
+func (t *radixTree) locateLeafNode(locateKey string) (locateNode, parentNode *node, find bool) {
+	locateNode, parentNode, find = t.recursiveLocateLeafNode(&t.root, &t.root, locateKey, locateKey)
+	return locateNode, parentNode, find
+}
+
+func (t *radixTree) recursiveFindParent(currentNode, parentNode, locateNode *node) (*node, bool) {
+	if currentNode.isLeafNode() {
+		return nil, false
+	}
+
+	if currentNode == locateNode {
+		return parentNode, true
+	}
+
+	for _, edgeObj := range currentNode.edges {
+		if edgeObj.targetNode == locateNode {
+			return currentNode, true
+		}
+
+		if pNode, find := t.recursiveFindParent(edgeObj.targetNode, currentNode, locateNode); find {
+			return pNode, true
+		}
+	}
+
+	return nil, false
+}
+
+func (t *radixTree) findParent(locateNode *node) (*node, bool) {
+	return t.recursiveFindParent(&t.root, &t.root, locateNode)
+}
+
 //Delete: Delete leaf node by seachKey will return if exist
 func (t *radixTree) Delete(searchKey string) bool {
+
+	//lNode, pNode, find := t.locateLeafNode(searchKey)
+	//if !find {
+	return false
+	//}
+
 	return false
 }

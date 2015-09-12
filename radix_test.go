@@ -6,24 +6,24 @@ import (
 )
 
 func TeststringSubsetPrefix(t *testing.T) {
-	sub, _ := stringSubsetPrefix("playground", "yield")
+	sub, _ := getSubsetPrefix("playground", "yield")
 	if sub != "" {
 		t.Errorf("None string subset failed, expect:%s but get:%s\n", "", sub)
 	}
 
-	sub, _ = stringSubsetPrefix("playground", "playground")
+	sub, _ = getSubsetPrefix("playground", "playground")
 	if sub != "playground" {
 		t.Errorf("full subset failed, expect:%s but get:%s\n", "playground", sub)
 	}
 
-	sub, _ = stringSubsetPrefix("playground", "playboy")
+	sub, _ = getSubsetPrefix("playground", "playboy")
 	if sub != "play" {
 		t.Errorf("Sub string subset failed, expect:%s but get:%s\n", "play", sub)
 	}
 
 	ss1 := "main"
 	ss2 := "mainly"
-	sub, _ = stringSubsetPrefix(ss2, ss1)
+	sub, _ = getSubsetPrefix(ss2, ss1)
 	if sub != ss1 {
 		t.Errorf("Sub string subset failed, expect:%s but get:%s\n", "main", sub)
 	}
@@ -122,4 +122,56 @@ func TestLookup(t *testing.T) {
 		t.Errorf("Insert update lookup failed, expect '7', but get %v", ret)
 	}
 
+}
+
+func TestLocateLeafNode(t *testing.T) {
+	rTree := radixTree{}
+	rTree.Insert("test", 1)
+	rTree.Insert("team", 2)
+	rTree.Insert("trobot", 3)
+	rTree.Insert("apple", 4)
+	rTree.Insert("app", 5)
+	rTree.Insert("tesla", 6)
+
+	cNode, pNode, find := rTree.locateLeafNode("trobot")
+	fmt.Println(cNode, pNode, find)
+
+	cNode, pNode, find = rTree.locateLeafNode("trobota")
+	fmt.Println(cNode, pNode, find)
+}
+
+func TestFindParent(t *testing.T) {
+	rTree := radixTree{}
+	rTree.Insert("test", 1)
+	rTree.Insert("team", 2)
+	rTree.Insert("trobot", 3)
+	rTree.Insert("apple", 4)
+	rTree.Insert("app", 5)
+	rTree.Insert("tesla", 6)
+
+	cNode, pNode, find := rTree.locateLeafNode("trobot")
+	fmt.Println(cNode, pNode, find)
+	cParent, cFind := rTree.findParent(cNode)
+	if cFind {
+		fmt.Println(cParent.edges)
+	} else {
+		t.Errorf("Failed in find parentNode")
+	}
+
+	nextParent, ccFind := rTree.findParent(cParent)
+	if ccFind {
+		fmt.Println(nextParent.edges)
+	} else {
+		t.Errorf("Failed in find parentNode")
+	}
+
+	pRoot, fRoot := rTree.findParent(&rTree.root)
+	if fRoot {
+		if pRoot != &rTree.root {
+			t.Errorf("Failed on find parent on root")
+		}
+		fmt.Println(pRoot.edges)
+	} else {
+		t.Errorf("Failed on find parent on root, cannot find it.")
+	}
 }
