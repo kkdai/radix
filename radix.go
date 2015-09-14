@@ -220,5 +220,6 @@ func (t *radixTree) Delete(searchKey string) bool {
 		lNode = pNode
 		pNode, _ = t.findParent(pNode)
 	}
-	return false
+
+	//return false
 }
