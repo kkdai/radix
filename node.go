@@ -2,10 +2,10 @@ package radix
 
 import "strings"
 
-type edge struct {
+type Edge struct {
 	containKey string
-	sourceNode *node
-	targetNode *node
+	sourceNode *Node
+	targetNode *Node
 }
 
 type leafNode struct {
@@ -13,22 +13,22 @@ type leafNode struct {
 	value interface{}
 }
 
-type node struct {
+type Node struct {
 	leaf  *leafNode
-	edges []edge
+	edges []Edge
 }
 
-func (n *node) isLeafNode() bool {
+func (n *Node) isLeafNode() bool {
 	return n.leaf != nil && len(n.edges) == 0
 }
 
-func (n *node) insertLeafNote(containKey, totalKey string, value interface{}) {
-	newNode := &node{leaf: &leafNode{key: totalKey, value: value}}
-	newEdge := edge{containKey: containKey, sourceNode: n, targetNode: newNode}
+func (n *Node) insertLeafNote(containKey, totalKey string, value interface{}) {
+	newNode := &Node{leaf: &leafNode{key: totalKey, value: value}}
+	newEdge := Edge{containKey: containKey, sourceNode: n, targetNode: newNode}
 	n.edges = append(n.edges, newEdge)
 }
 
-func (n *node) insertSplitNote(splitKey string, edgeKey string) *node {
+func (n *Node) insertSplitNote(splitKey string, edgeKey string) *Node {
 
 	if n.isLeafNode() {
 		//node is leaf node could not split, return nil
@@ -41,12 +41,12 @@ func (n *node) insertSplitNote(splitKey string, edgeKey string) *node {
 			originalTargetNode := n.edges[edgeIndex].targetNode
 
 			//insert split node
-			splitNode := &node{}
-			n.edges[edgeIndex] = edge{containKey: splitKey, sourceNode: n, targetNode: splitNode}
+			splitNode := &Node{}
+			n.edges[edgeIndex] = Edge{containKey: splitKey, sourceNode: n, targetNode: splitNode}
 
 			//connect to original node
 			remainKey := strings.TrimPrefix(edgeKey, splitKey)
-			edgeFromSplitToOri := edge{containKey: remainKey, sourceNode: splitNode, targetNode: originalTargetNode}
+			edgeFromSplitToOri := Edge{containKey: remainKey, sourceNode: splitNode, targetNode: originalTargetNode}
 			splitNode.edges = append(splitNode.edges, edgeFromSplitToOri)
 			return splitNode
 		}

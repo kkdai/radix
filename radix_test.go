@@ -32,29 +32,29 @@ func TeststringSubsetPrefix(t *testing.T) {
 
 func TestPrintTree(t *testing.T) {
 
-	rootNode := node{leaf: nil}
+	rootNode := Node{leaf: nil}
 
-	cNode := node{leaf: nil}
-	lNode := node{leaf: &leafNode{key: "company", value: 1}}
-	rNode := node{leaf: &leafNode{key: "comflict", value: 2}}
+	cNode := Node{leaf: nil}
+	lNode := Node{leaf: &leafNode{key: "company", value: 1}}
+	rNode := Node{leaf: &leafNode{key: "comflict", value: 2}}
 
-	rootEdge := edge{containKey: "com"}
+	rootEdge := Edge{containKey: "com"}
 	rootEdge.sourceNode = &rootNode
 	rootEdge.targetNode = &cNode
 	rootNode.edges = append(rootNode.edges, rootEdge)
 
-	lEdge := edge{containKey: "pany"}
+	lEdge := Edge{containKey: "pany"}
 	lEdge.sourceNode = &cNode
 	lEdge.targetNode = &lNode
 
-	rEdge := edge{containKey: "flict"}
+	rEdge := Edge{containKey: "flict"}
 	rEdge.sourceNode = &cNode
 	rEdge.targetNode = &rNode
 
 	cNode.edges = append(cNode.edges, lEdge)
 	cNode.edges = append(cNode.edges, rEdge)
 	fmt.Println("enges:", cNode.edges)
-	rTree := radixTree{}
+	rTree := RadixTree{}
 	rTree.root = rootNode
 
 	rTree.PrintTree()

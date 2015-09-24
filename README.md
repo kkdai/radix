@@ -79,7 +79,7 @@ Inspired By
 
 - [Radix Tree: Wiki](https://en.wikipedia.org/wiki/Radix_tree)
 - [armon/go-radix](https://github.com/armon/go-radix)
-
+- [Nginx: radix tree source code](https://trac.nginx.org/nginx/browser/nginx/src/core/ngx_radix_tree.c)
 
 Project52
 ---------------

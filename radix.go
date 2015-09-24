@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-type radixTree struct {
-	root node
+type RadixTree struct {
+	root Node
 }
 
 func contrainPrefix(str1, str2 string) bool {
@@ -37,11 +37,11 @@ func getSubsetPrefix(str1, str2 string) (string, bool) {
 }
 
 //Create a Radix Tree
-func NewRadixTree() *radixTree {
-	return &radixTree{}
+func NewRadixTree() *RadixTree {
+	return &RadixTree{}
 }
 
-func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
+func (t *RadixTree) recursivePrintTree(currentNode *Node, treeLevel int) {
 	indentStr := ""
 	for i := 1; i < treeLevel; i++ {
 		indentStr = indentStr + "\t"
@@ -61,11 +61,11 @@ func (t *radixTree) recursivePrintTree(currentNode *node, treeLevel int) {
 }
 
 //PrintTree: Print out current tree struct, it will using \t for tree level
-func (t *radixTree) PrintTree() {
+func (t *RadixTree) PrintTree() {
 	t.recursivePrintTree(&t.root, 1)
 }
 
-func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, targetKey string, targetValue interface{}) {
+func (t *RadixTree) recursiveInsertTree(currentNode *Node, containKey string, targetKey string, targetValue interface{}) {
 
 	//Reach leaf the end point, refer this case https://goo.gl/mqXzB1
 	if currentNode.isLeafNode() {
@@ -117,11 +117,11 @@ func (t *radixTree) recursiveInsertTree(currentNode *node, containKey string, ta
 
 //Insert: key and value into radix tree
 //Major implement refer from Wiki: https://en.wikipedia.org/wiki/Radix_tree
-func (t *radixTree) Insert(searchKey string, value interface{}) {
+func (t *RadixTree) Insert(searchKey string, value interface{}) {
 	t.recursiveInsertTree(&t.root, searchKey, searchKey, value)
 }
 
-func (t *radixTree) recursiveLoopup(searchNode *node, searchKey string) (interface{}, bool) {
+func (t *RadixTree) recursiveLoopup(searchNode *Node, searchKey string) (interface{}, bool) {
 	if searchNode.isLeafNode() {
 		return searchNode.leaf.value, true
 	}
@@ -137,11 +137,11 @@ func (t *radixTree) recursiveLoopup(searchNode *node, searchKey string) (interfa
 }
 
 //Lookup: Find if seachKey exist in current radix tree and return its value
-func (t *radixTree) Lookup(searchKey string) (interface{}, bool) {
+func (t *RadixTree) Lookup(searchKey string) (interface{}, bool) {
 	return t.recursiveLoopup(&t.root, searchKey)
 }
 
-func (t *radixTree) recursiveLocateLeafNode(currentNode, parentNode *node, containKey, locateKey string) (*node, *node, bool) {
+func (t *RadixTree) recursiveLocateLeafNode(currentNode, parentNode *Node, containKey, locateKey string) (*Node, *Node, bool) {
 
 	if currentNode.isLeafNode() {
 		return currentNode, parentNode, currentNode.leaf.key == locateKey
@@ -157,12 +157,12 @@ func (t *radixTree) recursiveLocateLeafNode(currentNode, parentNode *node, conta
 	return nil, nil, false
 }
 
-func (t *radixTree) locateLeafNode(locateKey string) (locateNode, parentNode *node, find bool) {
+func (t *RadixTree) locateLeafNode(locateKey string) (locateNode, parentNode *Node, find bool) {
 	locateNode, parentNode, find = t.recursiveLocateLeafNode(&t.root, &t.root, locateKey, locateKey)
 	return locateNode, parentNode, find
 }
 
-func (t *radixTree) recursiveFindParent(currentNode, parentNode, locateNode *node) (*node, bool) {
+func (t *RadixTree) recursiveFindParent(currentNode, parentNode, locateNode *Node) (*Node, bool) {
 	if currentNode.isLeafNode() {
 		return nil, false
 	}
@@ -184,12 +184,12 @@ func (t *radixTree) recursiveFindParent(currentNode, parentNode, locateNode *nod
 	return nil, false
 }
 
-func (t *radixTree) findParent(locateNode *node) (*node, bool) {
+func (t *RadixTree) findParent(locateNode *Node) (*Node, bool) {
 	return t.recursiveFindParent(&t.root, &t.root, locateNode)
 }
 
 //Delete: Delete leaf node by seachKey will return if exist
-func (t *radixTree) Delete(searchKey string) bool {
+func (t *RadixTree) Delete(searchKey string) bool {
 
 	lNode, pNode, find := t.locateLeafNode(searchKey)
 	if !find {
